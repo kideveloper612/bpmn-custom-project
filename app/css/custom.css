@@ -1,0 +1,25 @@
+.secondary-bar {
+    display: flex;
+    list-style: none;
+    position: absolute;
+    bottom: 50px;
+    left: 25px;
+    z-index: 100;
+}
+
+.lane-element {
+    display: flex;
+    align-items: center;
+    font-size: 30px;
+    margin: 5px;
+    cursor: default;
+}
+
+.lane-element:hover {
+    cursor: grabbing;
+}
+
+.lane-element span {
+    font-size: initial;
+    padding: 5px;
+}
