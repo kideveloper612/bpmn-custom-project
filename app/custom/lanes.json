@@ -1,14 +1,32 @@
 [
     {   
         "id": 1,
-        "name": "users"
+        "name": "users",
+        "children": [
+            "Mark King",
+            "Anthony Jackson",
+            "Federico Malaman ",
+            "John Smith",
+            "Sara Winnington"
+        ]
     },
     {
         "id": 2,
-        "name": "groups"
+        "name": "groups",
+        "children": [
+            "Technical Department",
+            "Sales",
+            "Call Center",
+            "Administration Dep"
+        ]
     },
     {
         "id": 3,
-        "name": "roles"
+        "name": "roles",
+        "children": [
+            "Administrator",
+            "Process Modeler",
+            "Normal Users"
+        ]
     }
 ]
