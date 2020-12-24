@@ -174,24 +174,57 @@ $(function () {
   });
 
   // Add secondary toolbar
-  let ul = document.createElement("ul");
-  ul.setAttribute("class", "secondary-bar");
+  let div = document.createElement("div");
+  div.setAttribute("class", "secondary-bar");
   lanes.forEach(element => {
     let span = document.createElement("span");
     let spanNode = document.createTextNode(`${element.name}`);
     span.appendChild(spanNode);
-    let li = document.createElement("li");
-    li.appendChild(span);
-    li.setAttribute("class", "bpmn-icon-lane lane-element");
-    li.setAttribute("draggable", "true");
-    li.setAttribute("title", `${element.name} Lane`);
-    li.ondragend= (e) => {
-      title = e.target.innerText;
-      flag = true;
-    }
-    ul.appendChild(li);
+    let button = document.createElement("button");
+    button.appendChild(span);
+    button.setAttribute("class", "bpmn-icon-user collapsible");
+    button.setAttribute("title", `${element.name} Lane`);
+    div.appendChild(button);
+
+    let ul = document.createElement("div");
+    element.children.forEach(subitem => {
+      let li = document.createElement("div");
+      const liText = document.createTextNode(`${subitem}`);
+      li.appendChild(liText);
+      li.setAttribute("class", "collapse-content");
+      li.setAttribute("draggable", "true");
+      li.ondragstart = (e) => {
+        title = e.target.innerText;
+        flag = true;
+        var els = document.getElementsByClassName("collapse-content");
+        Array.prototype.forEach.call(els, function(element){
+          element.style.backgroundColor = null;
+        });
+        li.style.backgroundColor = "#666";
+      };
+      ul.appendChild(li);
+    });
+    ul.setAttribute("class", "collapse-group");
+    div.appendChild(ul);
   });
-  document.getElementsByClassName('bjs-container')[0].appendChild(ul);
+  document.getElementsByClassName('bjs-container')[0].appendChild(div);
+
+  var coll = document.getElementsByClassName("collapsible");
+  for (let i = 0; i < coll.length; i++) {
+    coll[i].addEventListener("click", function () {
+      this.classList.toggle("active");
+      var contents = this.nextElementSibling.children;
+      for (let index = 0; index < contents.length; index++) {
+        const content = contents[index];
+        if (content.style.maxHeight) {
+          content.style.maxHeight = null;
+          content.style.margin = null;
+        } else {
+          content.style.maxHeight = 2 * content.scrollHeight + "px";
+        }
+      }
+    });
+  }
 
 });
 
