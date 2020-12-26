@@ -180,80 +180,79 @@ $(function () {
     flag = false;
 
     // Selectable Lane
-    const rects = document.querySelectorAll('.djs-group .djs-element.djs-shape[data-element-id^="Lane"] rect:last-child');
+    const rects = document.querySelectorAll('.djs-group .djs-element.djs-shape[data-element-id^="Lane"] rect.djs-outline');
     Array.prototype.forEach.call(rects, function (element) {
       element.classList.add("djs-hit-all");
     });
   });
 
-
   // Add secondary toolbar
   let div = document.createElement("div");
   div.setAttribute("class", "secondary-bar");
 
-  lanes.forEach(element => {
+  lanes.forEach((element, index) => {
+
+    let listBox = document.createElement("ul");
     let span = document.createElement("span");
     let spanNode = document.createTextNode(`${element.name}`);
-
+    
     span.appendChild(spanNode);
+    
+    let listHead = document.createElement("li");
 
-    let button = document.createElement("button");
+    listHead.appendChild(span);
 
-    button.appendChild(span);
-    button.setAttribute("class", "bpmn-icon-user collapsible");
-    button.setAttribute("title", `${element.name} Lane`);
-    div.appendChild(button);
+    if (index === 0) {
+      listBox.setAttribute("class", "users-list");
+      listHead.setAttribute("class", "list-head bpmn-icon-user");
+    }
+    else if (index === 1) {
+      listBox.setAttribute("class", "groups-list"); 
+      listHead.setAttribute("class", "list-head bpmn-icon-script-task");
+    }
+    else {
+      listBox.setAttribute("class", "roles-list");
+      listHead.setAttribute("class", "list-head bpmn-icon-intermediate-event-catch-non-interrupting-timer");
+    }
 
-    let ul = document.createElement("div");
+    listHead.setAttribute("title", `${element.name} Lane`);
+    listBox.appendChild(listHead);
 
-    element.children.forEach(subitem => {
-      let li = document.createElement("div");
-      const liText = document.createTextNode(`${subitem}`);
+    element.children.forEach(item => {
+      let listItem = document.createElement("li");
 
-      li.appendChild(liText);
-      li.setAttribute("class", "collapse-content");
-      li.setAttribute("draggable", "true");
+      listItem.setAttribute("class", "list-item");
 
-      li.ondragstart = (e) => {
+      const listText = document.createTextNode(`${item}`);
+      
+      listItem.appendChild(listText);
+      listItem.setAttribute("draggable", "true");
+
+      listItem.ondragstart = (e) => {
         title = e.target.innerText;
         flag = true;
 
-        var els = document.getElementsByClassName("collapse-content");
+        var els = document.getElementsByClassName("list-item");
         Array.prototype.forEach.call(els, function (element) {
           element.style.backgroundColor = null;
         });
 
-        li.style.backgroundColor = "#666";
+        listItem.style.backgroundColor = "#999";
       };
 
-      ul.appendChild(li);
+      listBox.appendChild(listItem);
     });
 
-    ul.setAttribute("class", "collapse-group");
-    div.appendChild(ul);
+    div.appendChild(listBox);
+
   });
 
   document.getElementsByClassName('bjs-container')[0].appendChild(div);
 
-  // Collapsible list
-  var coll = document.getElementsByClassName("collapsible");
-
-  for (let i = 0; i < coll.length; i++) {
-    coll[i].addEventListener("click", function () {
-      this.classList.toggle("active");
-      var contents = this.nextElementSibling.children;
-      
-      for (let index = 0; index < contents.length; index++) {
-        const content = contents[index];
-
-        if (content.style.maxHeight) {
-          content.style.maxHeight = null;
-          content.style.margin = null;
-        } else {
-          content.style.maxHeight = 2 * content.scrollHeight + "px";
-        }
-      }
-    });
+  // Reset the position of Secondary Toolbar
+  const twoColumn = document.querySelector(".djs-palette.two-column.open");
+  if (twoColumn) {
+    document.getElementsByClassName("secondary-bar")[0].style.left = "116px";
   }
 });
 
