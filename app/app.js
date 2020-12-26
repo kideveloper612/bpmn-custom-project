@@ -155,67 +155,97 @@ $(function () {
     }
   });
 
+  // Set variables for drag and drop title
   let flag = false;
   let title = '';
 
+  // Put title of lane using drag and drop
   eventBus.on('element.hover', 1000, function (context) {
+
     if (flag === true && context.element.type === 'bpmn:Lane') {
       directEditing.activate(context.element);
       const currentTitle = directEditing.getValue();
+
       if (currentTitle !== "") {
         directEditing._textbox.destroy();
         directEditing.complete();
         directEditing.activate(context.element);
       }
+
       directEditing._textbox.insertText(title);
       directEditing.complete();
+
     }
+
     flag = false;
+
+    // Selectable Lane
+    const rects = document.querySelectorAll('.djs-group .djs-element.djs-shape[data-element-id^="Lane"] rect:last-child');
+    Array.prototype.forEach.call(rects, function (element) {
+      element.classList.add("djs-hit-all");
+    });
   });
+
 
   // Add secondary toolbar
   let div = document.createElement("div");
   div.setAttribute("class", "secondary-bar");
+
   lanes.forEach(element => {
     let span = document.createElement("span");
     let spanNode = document.createTextNode(`${element.name}`);
+
     span.appendChild(spanNode);
+
     let button = document.createElement("button");
+
     button.appendChild(span);
     button.setAttribute("class", "bpmn-icon-user collapsible");
     button.setAttribute("title", `${element.name} Lane`);
     div.appendChild(button);
 
     let ul = document.createElement("div");
+
     element.children.forEach(subitem => {
       let li = document.createElement("div");
       const liText = document.createTextNode(`${subitem}`);
+
       li.appendChild(liText);
       li.setAttribute("class", "collapse-content");
       li.setAttribute("draggable", "true");
+
       li.ondragstart = (e) => {
         title = e.target.innerText;
         flag = true;
+
         var els = document.getElementsByClassName("collapse-content");
-        Array.prototype.forEach.call(els, function(element){
+        Array.prototype.forEach.call(els, function (element) {
           element.style.backgroundColor = null;
         });
+
         li.style.backgroundColor = "#666";
       };
+
       ul.appendChild(li);
     });
+
     ul.setAttribute("class", "collapse-group");
     div.appendChild(ul);
   });
+
   document.getElementsByClassName('bjs-container')[0].appendChild(div);
 
+  // Collapsible list
   var coll = document.getElementsByClassName("collapsible");
+
   for (let i = 0; i < coll.length; i++) {
     coll[i].addEventListener("click", function () {
       this.classList.toggle("active");
       var contents = this.nextElementSibling.children;
+      
       for (let index = 0; index < contents.length; index++) {
         const content = contents[index];
+
         if (content.style.maxHeight) {
           content.style.maxHeight = null;
           content.style.margin = null;
@@ -225,7 +255,6 @@ $(function () {
       }
     });
   }
-
 });
 
 // helpers //////////////////////

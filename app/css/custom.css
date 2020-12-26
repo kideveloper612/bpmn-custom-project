@@ -51,6 +51,8 @@
     padding: 0 18px;
     max-height: 0;
     overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
     line-height: 2.5;
     cursor: pointer;
     transition: max-height 0.02s ease-out;
